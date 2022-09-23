@@ -2,9 +2,14 @@ import {
   NavLink,
   Outlet,
   useSearchParams,
+  useLocation,
 } from "react-router-dom";
 import { getInvoices } from "../data";
-
+// Add comments for custom behavior and additives
+function QueryNavLink({ to, ...props }) {
+  let location = useLocation();
+  return <NavLink to={to + location.search} {...props} />;
+}
 export default function Invoices() {
   let invoices = getInvoices();
   // The variable below is like React's useState but it works by storing and setting state in the URL search params. 
@@ -39,7 +44,7 @@ export default function Invoices() {
             return name.startsWith(filter.toLowerCase());
           })
           .map((invoice) => (
-            <NavLink
+            <QueryNavLink
               /* isActive changes the simple object that preeceeded it to a function that returns an object*/
               style={({ isActive }) => {
               /* The Link element's 'to' prop means we link to the path that follows it- we'll get the number of our invoics returned to us*/
@@ -53,7 +58,7 @@ export default function Invoices() {
               key={invoice.number}
             >
             {invoice.name}
-          </NavLink>
+          </QueryNavLink>
         ))}
       </nav>
       <Outlet />
